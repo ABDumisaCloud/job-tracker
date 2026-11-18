@@ -1,39 +1,73 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aviwe - Job Tracker</title>
+<title>Job Tracker - Aviwe Dumisa</title>
 <style>
-body{font-family:Arial;padding:16px;background:#;color:#111}
-h1{font-size:22px} p{color:#555;font-size:14px}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:16px}
-button{width:100%;padding:14px;background:#111;color:#fff;border:0;border-radius:10px;font-size:16px;font-weight:bold}
-.card{background:#fff;padding:14px;border-radius:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.badge{font-size:12px;padding:4px 8px;border-radius:20px;background:#}
+body{font-family:Arial;background:#;padding:12px;margin:0}
+h1{text-align:center;margin:10px 0 0}
+p.sub{text-align:center;color:#555;margin:5px 0 15px}
+.box{background:#fff;padding:14px;border-radius:12px;margin-bottom:12px}
+input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px;font-size:16px;box-sizing:border-box}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:16px;color:#fff;background:#}
+.card{background:#fff;padding:13px;border-radius:12px;margin-bottom:10px}
+.card b{font-size:18px}
+.small{color:#666;font-size:13px}
+.card select{margin-top:8px}
+.row{display:flex;gap:8px;margin-top:8px}
+.row button{flex:1;padding:11px;border:none;border-radius:10px;font-size:15px;color:#fff}
+.upd{background:#}
+.del{background:#}
+.clear{background:#;margin-top:10px}
 </style>
 </head>
 <body>
 <h1>Job Tracker</h1>
-<p>Built by Aviwe Dumisa • AWS • Python • Live Demo</p>
+<p class="sub">By Aviwe Dumisa • Python Project + Web Demo</p>
+
+<div class="box">
 <input id="company" placeholder="Company e.g. Standard Bank">
 <input id="role" placeholder="Role e.g. Junior Cloud Engineer">
-<select id="status"><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option></select>
-<button onclick="addJob()">+ Add Job</button>
+<select id="status">
+<option>Applied</option>
+<option>Interview</option>
+<option>Offer</option>
+<option>Rejected</option>
+</select>
+<button class="btn" onclick="addJob()">+ Add Job</button>
+</div>
+
 <div id="list"></div>
+<button class="btn clear" onclick="clearAll()">Clear All Jobs</button>
+
 <script>
-let jobs = JSON.parse(localStorage.getItem('jobs')||'[]');
-function render(){
- document.getElementById('list').innerHTML = jobs.map((j,i)=>`
- <div class="card"><b>${j.company}</b><br>${j.role}<br><span class="badge">${j.status}</span> • ${j.date}</div>`).join('') || '<p>No jobs yet. Add one above to try it.</p>';
-}
+let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+function save(){ localStorage.setItem('jobs', JSON.stringify(jobs)); show(); }
 function addJob(){
- let c=document.getElementById('company').value, r=document.getElementById('role').value;
- if(!c||!r) return alert('Add company and role');
- jobs.unshift({company:c, role:r, status:document.getElementById('status').value, date:new Date().toLocaleDateString()});
- localStorage.setItem('jobs', JSON.stringify(jobs));
- document.getElementById('company').value=''; document.getElementById('role').value='';
- render();
+ let c=document.getElementById('company').value.trim();
+ let r=document.getElementById('role').value.trim();
+ let s=document.getElementById('status').value;
+ if(!c || !r){ alert('Please fill Company and Role'); return; }
+ jobs.push({company:c, role:r, status:s, date:new Date().toLocaleDateString('en-GB')});
+ document.getElementById('company').value='';
+ document.getElementById('role').value='';
+ save();
 }
-render();
+function delJob(i){ if(confirm('Delete '+jobs[i].company+'?')){ jobs.splice(i,1); save(); } }
+function updJob(i){
+ let sel=document.getElementById('upd'+i);
+ jobs[i].status=sel.value;
+ save();
+ alert('Updated to '+sel.value);
+}
+function clearAll(){ if(confirm('Delete ALL jobs?')){ jobs=[]; save(); } }
+function show(){
+ let html='';
+ jobs.forEach((j,i)=>{
+ html+=`<div class="card"><b>${j.company}</b><br>${j.role}<br><span class="small">${j.status} • ${j.date}</span><select id="upd${i}"><option ${j.status=='Applied'?'selected':''}>Applied</option><option ${j.status=='Interview'?'selected':''}>Interview</option><option ${j.status=='Offer'?'selected':''}>Offer</option><option ${j.status=='Rejected'?'selected':''}>Rejected</option></select><div class="row"><button class="upd" onclick="updJob(${i})">Update</button><button class="del" onclick="delJob(${i})">Delete</button></div></div>`;
+ });
+ document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#666">No jobs yet. Add one above.</p>';
+}
+show();
 </script>
 </body>
 </html>
