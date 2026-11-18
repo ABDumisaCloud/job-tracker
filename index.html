@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aviwe - Job Tracker</title>
+<style>
+body{font-family:Arial;padding:16px;background:#;color:#111}
+h1{font-size:22px} p{color:#555;font-size:14px}
+input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:16px}
+button{width:100%;padding:14px;background:#111;color:#fff;border:0;border-radius:10px;font-size:16px;font-weight:bold}
+.card{background:#fff;padding:14px;border-radius:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.badge{font-size:12px;padding:4px 8px;border-radius:20px;background:#}
+</style>
+</head>
+<body>
+<h1>Job Tracker</h1>
+<p>Built by Aviwe Dumisa • AWS • Python • Live Demo</p>
+<input id="company" placeholder="Company e.g. Standard Bank">
+<input id="role" placeholder="Role e.g. Junior Cloud Engineer">
+<select id="status"><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option></select>
+<button onclick="addJob()">+ Add Job</button>
+<div id="list"></div>
+<script>
+let jobs = JSON.parse(localStorage.getItem('jobs')||'[]');
+function render(){
+ document.getElementById('list').innerHTML = jobs.map((j,i)=>`
+ <div class="card"><b>${j.company}</b><br>${j.role}<br><span class="badge">${j.status}</span> • ${j.date}</div>`).join('') || '<p>No jobs yet. Add one above to try it.</p>';
+}
+function addJob(){
+ let c=document.getElementById('company').value, r=document.getElementById('role').value;
+ if(!c||!r) return alert('Add company and role');
+ jobs.unshift({company:c, role:r, status:document.getElementById('status').value, date:new Date().toLocaleDateString()});
+ localStorage.setItem('jobs', JSON.stringify(jobs));
+ document.getElementById('company').value=''; document.getElementById('role').value='';
+ render();
+}
+render();
+</script>
+</body>
+</html>
