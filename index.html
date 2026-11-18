@@ -3,30 +3,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Job Tracker - Aviwe Dumisa</title>
 <style>
-body{font-family:Arial;background:#;padding:12px;margin:0}
-h1{text-align:center;margin:10px 0 0}
-p.sub{text-align:center;color:#555;margin:5px 0 15px}
-.box{background:#fff;padding:14px;border-radius:12px;margin-bottom:12px}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px;font-size:16px;box-sizing:border-box}
-.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:16px;color:#fff;background:#}
-.card{background:#fff;padding:13px;border-radius:12px;margin-bottom:10px}
-.card b{font-size:18px}
-.small{color:#666;font-size:13px}
-.card select{margin-top:8px}
-.row{display:flex;gap:8px;margin-top:8px}
-.row button{flex:1;padding:11px;border:none;border-radius:10px;font-size:15px;color:#fff}
-.upd{background:#}
-.del{background:#}
-.clear{background:#;margin-top:10px}
+body{font-family:Arial, sans-serif;background:#F1F5F9;padding:14px;margin:0;color:#1E293B}
+h1{text-align:center;margin:10px 0 0;font-size:26px;color:#0F172A}
+p.sub{text-align:center;color:#475569;margin:5px 0 15px;font-size:15px;font-weight:600}
+.box{background:#FFFFFF;padding:16px;border-radius:16px;margin-bottom:14px;border:1px solid #CBD5E1}
+input,select{width:100%;padding:14px;margin:7px 0;border:1.5px solid #94A3B8;border-radius:12px;font-size:17px;font-weight:600;color:#0F172A;background:#FFFFFF;box-sizing:border-box}
+label{font-weight:700;font-size:14px;color:#334155}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:18px;font-weight:700;color:#FFFFFF;background:#2563EB}
+.card{background:#FFFFFF;padding:16px;border-radius:16px;margin-bottom:12px;border:1px solid #CBD5E1}
+.card b{font-size:20px;color:#0F172A}
+.card div{font-size:16px;color:#334155;font-weight:500}
+.small{color:#0F172A;font-size:15px;font-weight:700}
+.card select{margin-top:10px;background:#EFF6FF;color:#1E40AF;border:1.5px solid #93C5FD;font-weight:700}
+.row{display:flex;gap:10px;margin-top:12px}
+.row button{flex:1;padding:14px;border:none;border-radius:12px;font-size:17px;font-weight:700;color:#FFFFFF}
+.upd{background:#16A34A}
+.del{background:#DC2626}
+.clear{background:#475569;margin-top:12px;color:#FFFFFF}
+.status-label{margin-top:10px;font-size:13px;font-weight:700;color:#475569}
 </style>
 </head>
 <body>
 <h1>Job Tracker</h1>
-<p class="sub">By Aviwe Dumisa • Python Project + Web Demo</p>
+<p class="sub">By Aviwe Dumisa • Eye Friendly</p>
 
 <div class="box">
+<label>COMPANY</label>
 <input id="company" placeholder="Company e.g. Standard Bank">
+<label>ROLE</label>
 <input id="role" placeholder="Role e.g. Junior Cloud Engineer">
+<label>STATUS</label>
 <select id="status">
 <option>Applied</option>
 <option>Interview</option>
@@ -54,18 +60,17 @@ function addJob(){
 }
 function delJob(i){ if(confirm('Delete '+jobs[i].company+'?')){ jobs.splice(i,1); save(); } }
 function updJob(i){
- let sel=document.getElementById('upd'+i);
- jobs[i].status=sel.value;
+ let newStatus = document.getElementById('upd'+i).value;
+ jobs[i].status = newStatus;
  save();
- alert('Updated to '+sel.value);
 }
 function clearAll(){ if(confirm('Delete ALL jobs?')){ jobs=[]; save(); } }
 function show(){
  let html='';
  jobs.forEach((j,i)=>{
- html+=`<div class="card"><b>${j.company}</b><br>${j.role}<br><span class="small">${j.status} • ${j.date}</span><select id="upd${i}"><option ${j.status=='Applied'?'selected':''}>Applied</option><option ${j.status=='Interview'?'selected':''}>Interview</option><option ${j.status=='Offer'?'selected':''}>Offer</option><option ${j.status=='Rejected'?'selected':''}>Rejected</option></select><div class="row"><button class="upd" onclick="updJob(${i})">Update</button><button class="del" onclick="delJob(${i})">Delete</button></div></div>`;
+ html+=`<div class="card"><b>${j.company}</b><div>${j.role}</div><div class="small">Status: ${j.status} • ${j.date}</div><div class="status-label">Tap to change status, then press Update:</div><select id="upd${i}"><option ${j.status=='Applied'?'selected':''}>Applied</option><option ${j.status=='Interview'?'selected':''}>Interview</option><option ${j.status=='Offer'?'selected':''}>Offer</option><option ${j.status=='Rejected'?'selected':''}>Rejected</option></select><div class="row"><button class="upd" onclick="updJob(${i})">Update</button><button class="del" onclick="delJob(${i})">Delete</button></div></div>`;
  });
- document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#666">No jobs yet. Add one above.</p>';
+ document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#334155;font-weight:700">No jobs yet. Add one above.</p>';
 }
 show();
 </script>
